@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MaxGrade — помощник школьника</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:25px 15px;background:#101827;color:#fff;font-family:Arial,sans-serif}
+main{max-width:440px;margin:35px auto;background:#1c293c;padding:25px;border-radius:20px}
+h1{text-align:center;margin-top:0;color:#73a9ff}
+p{text-align:center;color:#b8c5d8}
+label{display:block;margin-top:18px;margin-bottom:8px}
+input,select{width:100%;padding:14px;border:1px solid #42516a;border-radius:10px;background:#111c2d;color:white;font-size:16px}
+button{width:100%;margin-top:25px;padding:15px;border:0;border-radius:10px;background:#367cf5;color:white;font-size:17px;font-weight:bold}
+#result{margin-top:20px;padding:15px;background:#263951;border-radius:10px;line-height:1.6}
+</style>
+</head>
+<body>
+<main>
+<h1>MaxGrade</h1>
+<p>Помощник для расчёта школьных оценок</p>
+<label>Текущий средний балл</label>
+<input id="avg" type="number" min="2" max="5" step="0.01" placeholder="Например, 3.35">
+<label>Количество оценок в дневнике</label>
+<input id="count" type="number" min="1" step="1" placeholder="Например, 6">
+<label>Желаемая четвертная оценка</label>
+<select id="target">
+<option value="3">3 — Удовлетворительно</option>
+<option value="4" selected>4 — Хорошо</option>
+<option value="5">5 — Отлично</option>
+</select>
+<button onclick="calculate()">Рассчитать план</button>
+<div id="result">Здесь появится твой план оценок.</div>
+</main>
+<script>
+function calculate(){
+const avg=Number(document.getElementById('avg').value);
+const count=Number(document.getElementById('count').value);
+const target=Number(document.getElementById('target').value);
+const result=document.getElementById('result');
+if(!Number.isFinite(avg)||avg<2||avg>5||!Number.isInteger(count)||count<1){
+result.textContent='Проверь средний балл и количество оценок.';
+return;
+}
+let needed=0;
+while(needed<100){
+if((avg*count+5*needed)/(count+needed)>=target-0.01)break;
+needed++;
+}
+if(needed===100){
+result.textContent='Пока достичь цели одними пятёрками не получится.';
+return;
+}
+result.innerHTML=needed===0
+?'Текущего среднего балла уже достаточно для выбранной цели!'
+:'Чтобы приблизиться к оценке '+target+', постарайся получить примерно '+needed+' пятёрок подряд. Учти, что итоговую оценку учитель выставляет с учётом всех работ.';
+}
+</script>
+</body>
+</html>
